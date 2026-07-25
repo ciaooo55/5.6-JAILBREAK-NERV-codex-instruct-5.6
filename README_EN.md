@@ -1,3 +1,6 @@
+<img width="1672" height="941" alt="5 6-JAILBREAK-NERV" src="https://github.com/user-attachments/assets/144bc8a8-385c-4b5c-be74-f853c9d0f0cb" />
+
+
 # NERV-BREAK-5.6 — GPT-5.6 Instruction Engineering Jailbreak
 
 **English** | [中文](README.md)
