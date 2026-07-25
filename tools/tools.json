@@ -1,0 +1,807 @@
+{
+  "_config": {
+    "backend": "auto",
+    "wsl_distro": "kali-linux",
+    "docker_container": "kali-tools",
+    "ssh_host": "",
+    "tool_paths": {
+      "windows": "tools/win/",
+      "linux": "/usr/bin/",
+      "wsl": "/usr/bin/"
+    }
+  },
+  "tools": [
+    {
+      "name": "nmap_scan",
+      "desc": "Port scan target",
+      "cmd": "nmap {flags} -p {ports} {target}",
+      "params": [
+        "target",
+        "ports",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "masscan_scan",
+      "desc": "Fast mass port scan",
+      "cmd": "masscan {target} -p{ports} --rate=1000",
+      "params": [
+        "target",
+        "ports"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "tcpdump_capture",
+      "desc": "Capture network traffic",
+      "cmd": "tcpdump -i {interface} '{filter}' -c {count} -n",
+      "params": [
+        "interface",
+        "filter",
+        "count"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "netcat_connect",
+      "desc": "TCP/UDP connect/listen",
+      "cmd": "nc {flags} {host} {port}",
+      "params": [
+        "host",
+        "port",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "sqlmap_scan",
+      "desc": "SQL injection test",
+      "cmd": "sqlmap -u '{url}' {flags} --batch --random-agent",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "dirb_scan",
+      "desc": "Directory brute force",
+      "cmd": "dirb {url} {wordlist} -r",
+      "params": [
+        "url",
+        "wordlist"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "nikto_scan",
+      "desc": "Web server vulnerability scanner",
+      "cmd": "nikto -h {host} -p {port}",
+      "params": [
+        "host",
+        "port"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "wpscan",
+      "desc": "WordPress vulnerability scanner",
+      "cmd": "wpscan --url {url} {flags} --no-banner",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "ffuf_fuzz",
+      "desc": "Web fuzzer (dirs/params/vhosts)",
+      "cmd": "ffuf -u {url} -w {wordlist} {flags}",
+      "params": [
+        "url",
+        "wordlist",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "curl_fetch",
+      "desc": "Fetch URL with headers",
+      "cmd": "curl -sL -D - {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "gobuster_scan",
+      "desc": "Directory/DNS/VHOST brute force",
+      "cmd": "gobuster dir -u {url} -w {wordlist} {flags}",
+      "params": [
+        "url",
+        "wordlist",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "msf_search",
+      "desc": "Search Metasploit exploits",
+      "cmd": "msfconsole -q -x 'search {keyword}; exit'",
+      "params": [
+        "keyword"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "msf_exploit",
+      "desc": "Run Metasploit exploit",
+      "cmd": "msfconsole -q -x 'use {exploit}; set RHOSTS {target}; set PAYLOAD {payload}; set LHOST {lhost}; set LPORT {lport}; exploit -j; exit'",
+      "params": [
+        "exploit",
+        "target",
+        "payload",
+        "lhost",
+        "lport"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "searchsploit",
+      "desc": "Search Exploit-DB",
+      "cmd": "searchsploit {keyword}",
+      "params": [
+        "keyword"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "hydra_brute",
+      "desc": "Brute force login",
+      "cmd": "hydra -L {userlist} -P {passlist} {target} {service} {flags}",
+      "params": [
+        "service",
+        "target",
+        "userlist",
+        "passlist",
+        "flags"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "john_crack",
+      "desc": "Crack hashes (John the Ripper)",
+      "cmd": "john {hashfile} {flags}",
+      "params": [
+        "hashfile",
+        "flags"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "hashcat_crack",
+      "desc": "GPU hash cracking",
+      "cmd": "hashcat -m 0 {hashfile} {mask} {flags}",
+      "params": [
+        "hashfile",
+        "mask",
+        "flags"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "strings_extract",
+      "desc": "Extract strings from binary",
+      "cmd": "strings -n {min_len} '{file}'",
+      "params": [
+        "file",
+        "min_len"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "objdump_disasm",
+      "desc": "Disassemble binary",
+      "cmd": "objdump -d {flags} '{file}'",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "radare2_analyze",
+      "desc": "Analyze binary with radare2",
+      "cmd": "r2 -q -c '{commands}' '{file}'",
+      "params": [
+        "file",
+        "commands"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "binwalk_extract",
+      "desc": "Extract embedded files",
+      "cmd": "binwalk -e {flags} '{file}'",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "ghidra_headless",
+      "desc": "Ghidra headless analysis",
+      "cmd": "ghidra_headless.sh '{file}' {project_dir} -import '{file}' -postScript {script}",
+      "params": [
+        "file",
+        "project_dir",
+        "script"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "exiftool_read",
+      "desc": "Read file metadata",
+      "cmd": "exiftool {flags} '{file}'",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "forensics"
+    },
+    {
+      "name": "foremost_carve",
+      "desc": "File carving / recovery",
+      "cmd": "foremost -i '{file}' -o {output_dir}",
+      "params": [
+        "file",
+        "output_dir"
+      ],
+      "category": "forensics"
+    },
+    {
+      "name": "volatility_analyze",
+      "desc": "Memory forensics",
+      "cmd": "vol.py -f '{file}' {plugin} {flags}",
+      "params": [
+        "file",
+        "plugin",
+        "flags"
+      ],
+      "category": "forensics"
+    },
+    {
+      "name": "openssl_analyze",
+      "desc": "SSL/TLS certificate analysis",
+      "cmd": "openssl s_client -connect {host}:{port} -servername {host}",
+      "params": [
+        "host",
+        "port"
+      ],
+      "category": "crypto"
+    },
+    {
+      "name": "powershell_exec",
+      "desc": "Execute PowerShell command",
+      "cmd": "powershell -Command \"{command}\"",
+      "params": [
+        "command"
+      ],
+      "category": "windows"
+    },
+    {
+      "name": "reg_query",
+      "desc": "Query Windows Registry",
+      "cmd": "reg query \"{key}\" {flags}",
+      "params": [
+        "key",
+        "flags"
+      ],
+      "category": "windows"
+    },
+    {
+      "name": "wmic_query",
+      "desc": "WMI query",
+      "cmd": "wmic {class_name} get {properties} {flags}",
+      "params": [
+        "class_name",
+        "properties",
+        "flags"
+      ],
+      "category": "windows"
+    },
+    {
+      "name": "python_exec",
+      "desc": "Execute Python code",
+      "cmd": "python -c '{code}'",
+      "params": [
+        "code"
+      ],
+      "category": "scripting"
+    },
+    {
+      "name": "shell_exec",
+      "desc": "Execute shell command (use carefully)",
+      "cmd": "{command}",
+      "params": [
+        "command"
+      ],
+      "category": "scripting"
+    },
+    {
+      "name": "burp_proxy",
+      "desc": "Burp Suite HTTP proxy/intercept",
+      "cmd": "java -jar burpsuite.jar --proxy={host}:{port}",
+      "params": [
+        "host",
+        "port"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "mitmproxy",
+      "desc": "Man-in-the-middle proxy with Python scripting",
+      "cmd": "mitmproxy --mode {mode} --listen-port {port}",
+      "params": [
+        "mode",
+        "port"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "subfinder",
+      "desc": "Passive subdomain discovery",
+      "cmd": "subfinder -d {domain} {flags}",
+      "params": [
+        "domain",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "amass",
+      "desc": "Network mapping and external asset discovery",
+      "cmd": "amass enum -d {domain} {flags}",
+      "params": [
+        "domain",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "whatweb",
+      "desc": "Website technology stack identification",
+      "cmd": "whatweb {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "wafw00f",
+      "desc": "WAF detection and fingerprinting",
+      "cmd": "wafw00f {url}",
+      "params": [
+        "url"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "nuclei",
+      "desc": "Fast vulnerability scanner based on templates",
+      "cmd": "nuclei -u {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "xray",
+      "desc": "Passive vulnerability scanner (community edition)",
+      "cmd": "xray webscan --url {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "nessus_scan",
+      "desc": "Nessus vulnerability scanner (CLI)",
+      "cmd": "nessuscli scan --target {target} --policy {policy}",
+      "params": [
+        "target",
+        "policy"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "commix",
+      "desc": "Command injection exploitation tool",
+      "cmd": "commix --url={url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "xsstrike",
+      "desc": "Advanced XSS detection suite",
+      "cmd": "xsstrike -u {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "nosqlmap",
+      "desc": "NoSQL injection testing tool",
+      "cmd": "nosqlmap --url {url} {flags}",
+      "params": [
+        "url",
+        "flags"
+      ],
+      "category": "web"
+    },
+    {
+      "name": "medusa",
+      "desc": "Parallel network login brute-forcer",
+      "cmd": "medusa -h {target} -U {userlist} -P {passlist} -M {module} {flags}",
+      "params": [
+        "target",
+        "userlist",
+        "passlist",
+        "module",
+        "flags"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "cewl",
+      "desc": "Custom wordlist generator from target website",
+      "cmd": "cewl {url} -w {output} {flags}",
+      "params": [
+        "url",
+        "output",
+        "flags"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "crunch",
+      "desc": "Wordlist generator with pattern support",
+      "cmd": "crunch {min} {max} {charset} -o {output}",
+      "params": [
+        "min",
+        "max",
+        "charset",
+        "output"
+      ],
+      "category": "password"
+    },
+    {
+      "name": "apktool",
+      "desc": "Android APK reverse engineering",
+      "cmd": "apktool d {file} -o {output_dir}",
+      "params": [
+        "file",
+        "output_dir"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "jadx",
+      "desc": "Dex to Java decompiler",
+      "cmd": "jadx -d {output_dir} {file}",
+      "params": [
+        "file",
+        "output_dir"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "frida_trace",
+      "desc": "Dynamic instrumentation toolkit",
+      "cmd": "frida-trace -U -i '{function}' {process}",
+      "params": [
+        "function",
+        "process"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "bettercap",
+      "desc": "Swiss army knife for network attacks and monitoring",
+      "cmd": "bettercap -eval '{command}'",
+      "params": [
+        "command"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "responder",
+      "desc": "LLMNR/NBT-NS/mDNS poisoner",
+      "cmd": "responder -I {interface} {flags}",
+      "params": [
+        "interface",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "impacket",
+      "desc": "Network protocols manipulation toolkit",
+      "cmd": "python -m impacket.examples.{script} {args}",
+      "params": [
+        "script",
+        "args"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "setoolkit",
+      "desc": "Social-Engineer Toolkit",
+      "cmd": "setoolkit {flags}",
+      "params": [
+        "flags"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "gophish",
+      "desc": "Open-source phishing toolkit",
+      "cmd": "gophish {flags}",
+      "params": [
+        "flags"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "aircrack_ng",
+      "desc": "WiFi security auditing suite",
+      "cmd": "aircrack-ng {flags} {file}",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "reaver",
+      "desc": "WPS brute force attack tool",
+      "cmd": "reaver -i {interface} -b {bssid} {flags}",
+      "params": [
+        "interface",
+        "bssid",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "mimikatz",
+      "desc": "Windows credential extraction",
+      "cmd": "mimikatz.exe \"{command}\" exit",
+      "params": [
+        "command"
+      ],
+      "category": "windows"
+    },
+    {
+      "name": "bloodhound",
+      "desc": "Active Directory attack path analysis",
+      "cmd": "bloodhound-python -d {domain} -u {user} -p {password} -ns {ns}",
+      "params": [
+        "domain",
+        "user",
+        "password",
+        "ns"
+      ],
+      "category": "windows"
+    },
+    {
+      "name": "crackmapexec",
+      "desc": "Swiss army knife for pentesting networks",
+      "cmd": "crackmapexec {protocol} {target} {flags}",
+      "params": [
+        "protocol",
+        "target",
+        "flags"
+      ],
+      "category": "exploit"
+    },
+    {
+      "name": "theharvester",
+      "desc": "Email/domain/subdomain/name gathering",
+      "cmd": "theharvester -d {domain} -b {source} {flags}",
+      "params": [
+        "domain",
+        "source",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "sherlock",
+      "desc": "Username search across social networks",
+      "cmd": "sherlock {username} {flags}",
+      "params": [
+        "username",
+        "flags"
+      ],
+      "category": "network"
+    },
+    {
+      "name": "ida_headless",
+      "desc": "IDA Pro headless disassembler",
+      "cmd": "idat64 -A -S{script} {file}",
+      "params": [
+        "file",
+        "script"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "x64dbg",
+      "desc": "x64/x32 debugger for Windows",
+      "cmd": "x64dbg.exe -s {script} {file}",
+      "params": [
+        "file",
+        "script"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "ollydbg",
+      "desc": "32-bit debugger with plugin support",
+      "cmd": "ollydbg.exe {file}",
+      "params": [
+        "file"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "dnspy",
+      "desc": ".NET decompiler and debugger",
+      "cmd": "dnspy.exe {file}",
+      "params": [
+        "file"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "ilspy",
+      "desc": ".NET assembly browser and decompiler",
+      "cmd": "ilspycmd {file} -o {output_dir}",
+      "params": [
+        "file",
+        "output_dir"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "dex2jar",
+      "desc": "Android DEX to JAR converter",
+      "cmd": "d2j-dex2jar {file} -o {output}",
+      "params": [
+        "file",
+        "output"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "smali_tool",
+      "desc": "Smali/Baksmali assembler/disassembler",
+      "cmd": "java -jar smali.jar a {input_dir} -o {output}",
+      "params": [
+        "input_dir",
+        "output"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "angr",
+      "desc": "Python binary analysis framework",
+      "cmd": "python -c 'import angr; p=angr.Project(\"{file}\"); {code}'",
+      "params": [
+        "file",
+        "code"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "detect_it_easy",
+      "desc": "Packer/protector/compiler detector",
+      "cmd": "diec {file} {flags}",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "peframe",
+      "desc": "PE file static analysis tool",
+      "cmd": "peframe {file} {flags}",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "upx_unpack",
+      "desc": "UPX executable packer/unpacker",
+      "cmd": "upx -d {file} -o {output}",
+      "params": [
+        "file",
+        "output"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "scylla",
+      "desc": "x86/x64 imports reconstruction",
+      "cmd": "Scylla.exe -f {file} -o {output}",
+      "params": [
+        "file",
+        "output"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "pestudio",
+      "desc": "PE file analysis without execution",
+      "cmd": "pestudio {file}",
+      "params": [
+        "file"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "dumpbin",
+      "desc": "Microsoft COFF/PE dumper",
+      "cmd": "dumpbin /{flags} {file}",
+      "params": [
+        "file",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "cheat_engine",
+      "desc": "Memory scanner and debugger",
+      "cmd": "cheatengine-{arch}.exe {flags}",
+      "params": [
+        "arch",
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "process_hacker",
+      "desc": "Advanced process viewer and memory editor",
+      "cmd": "ProcessHacker.exe {flags}",
+      "params": [
+        "flags"
+      ],
+      "category": "reverse"
+    },
+    {
+      "name": "yara_scan",
+      "desc": "Pattern matching swiss knife for malware researchers",
+      "cmd": "yara {rules} {target}",
+      "params": [
+        "rules",
+        "target"
+      ],
+      "category": "reverse"
+    }
+  ]
+}
