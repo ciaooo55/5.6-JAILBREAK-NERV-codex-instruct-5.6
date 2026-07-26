@@ -1,7 +1,7 @@
 <img width="1672" height="941" alt="5 6-JAILBREAK-NERV" src="https://github.com/user-attachments/assets/5c1783ce-be46-45bb-9e10-c127d4e49d34" />
 
 
-# NERV-BREAK-5.6 — GPT-5.6 指令工程
+# NERV-BREAK-5.6 — GPT-5.6 指令工程/codex-instruct-5.6
 
 [English](README_EN.md) | **中文**
 
