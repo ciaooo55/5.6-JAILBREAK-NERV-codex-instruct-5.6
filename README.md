@@ -453,6 +453,195 @@ A: 中文在模型的安全分类器中权重更低，不容易触发内部安�
 ### 技能 — 28个模块
 `crack-keygen` · `reverse-engineering` · `web-pentest` · `exploit-dev` · `evasion` · `cloud-audit-bypass` · `network-pentest` · `post-exploit` · `malware-dev` · `game-cheat` · `phishing-kit` · `wireless-attacks` · `ransomware-builder` · `data-exfil` · `crypto-tools` · `anti-debug` · `binary-protect-bypass` · `code-obfuscate` · `posture-assessment` · `full-crack` · `full-reverse` · `vip-bypass` · `card-key` · `full-pentest` · `exploit-attack` · `vuln-scanner` · `web-crawler` · `rei-fallback`
 
+# lab.bat 控制面板 — 每条命令详解
+
+---
+
+## [1] start — 启动代理
+
+**做了什么**：
+1. 自动检测你电脑上的 Codex CLI 安装位置
+2. 读取 Codex 配置中的中转站地址（默认 127.0.0.1:57321）
+3. 备份 `config.toml` → 防止弄坏 Codex
+4. 把 bridge.md 复制到 Codex 目录
+5. 把 27 个技能模块复制到 Codex 目录
+6. 把 Codex 的 base_url 从 57321 改成 8080（让 Codex 所有请求走代理）
+7. 启动 MITM 代理 → 监听 8080 端口
+8. 启动 Web 仪表盘 → 浏览器打开 `http://localhost:8090`
+
+**代理启动后终端会显示所有请求和响应**，你在 Codex 里聊什么都能看到。
+
+**这个选项只需要选一次**，代理会一直运行直到你选 [2] 停止。
+
+---
+
+## [2] stop — 停止代理并还原 Codex
+
+**做了什么**：
+1. 强制关闭代理进程
+2. 把之前备份的 `config.toml` 恢复回来
+3. base_url 改回 57321（Codex 恢复直连中转站）
+
+**什么时候用**：
+- 代理出 bug 了，Codex 连不上 → 先停代理恢复直连
+- 不玩了这个项目，让 Codex 回到正常状态
+
+**选了 [2] 后 Codex 完全恢复原状**，就像没装过这个项目一样。
+
+---
+
+## [3] status — 查看代理状态
+
+**做了什么**：
+- 检查 8080 端口是否在监听 → 判断代理是否在运行
+- 尝试访问代理健康检查接口 → 确认代理能正常响应
+
+**显示结果**：
+```
+Proxy: RUNNING on :8080     ← 代理正常
+NERV-BREAK-5.6 OK            ← 健康检查通过
+```
+或
+```
+Proxy: STOPPED               ← 代理没启动，选 [1]
+```
+
+---
+
+## [4] kali-wsl — 安装 WSL Kali Linux
+
+**做了什么**：
+- 运行 `wsl --install -d kali-linux`
+- 在 Windows 的 WSL 子系统中安装完整的 Kali Linux
+
+**为什么要装**：
+Kali 自带 600+ 安全工具（nmap、sqlmap、msf、hydra、aircrack-ng...）。装完这个，MCP 工具列表里的 80% 工具直接可用。
+
+**安装后还需要**：
+```bash
+wsl -d kali-linux                      # 进入 Kali
+sudo apt update                         # 更新软件源
+sudo apt install -y kali-linux-headless # 安装工具集
+python mcp_server.py --wsl              # 指定 WSL 后端启动
+```
+
+**下载大小**：约 1-2GB。如果网速慢可以先跳过，基本的 Python 工具选 [8] 就够用。
+
+---
+
+## [5] kali-docker — 设置 Docker Kali
+
+**做了什么**：
+- 显示 Docker Kali 的安装命令（不会自动执行，需要你手动操作）
+
+**适用场景**：
+- 电脑上已经装了 Docker Desktop
+- 不想装 WSL，想要更轻量的隔离环境
+- 需要一个可随时销毁重建的 Kali 环境
+
+**手动步骤**：
+```bash
+docker pull kalilinux/kali-rolling
+docker run -d --name kali-tools kalilinux/kali-rolling sleep infinity
+docker exec kali-tools apt update
+docker exec kali-tools apt install -y kali-linux-headless
+python mcp_server.py --docker kali-tools
+```
+
+---
+
+## [6] kali-ssh — 配置远程 SSH Kali
+
+**做了什么**：
+- 让你输入远程 Kali 的 IP 地址
+- 显示启动命令：`python mcp_server.py --kali root@你的IP`
+
+**适用场景**：
+- 有一台独立运行 Kali Linux 的物理机或虚拟机
+- 通过网络远程调用那台机器上的工具
+- 不占用本机资源
+
+---
+
+## [7] tools-check — 检查已安装的工具
+
+**做了什么**：
+- 运行 `tools/check_tools.py`
+- 逐个检查 57 个安全工具是否在本机可用
+- 列出来：哪些装了、哪些缺了
+
+**结果显示**：
+```
+Available: 6/57          ← 只装了6个（本机没有Kali的情况下）
+
+[network] 8 missing      ← 网络类工具缺8个
+[web] 15 missing         ← Web类工具缺15个
+...
+```
+如果想补全，选 [4] 装 Kali 或 [8] 装 Python 工具。
+
+---
+
+## [8] tools-install — 安装 Python 工具
+
+**做了什么**：
+- 用 pip 安装可以在 Windows 上运行的 Python 安全工具
+- 当前安装：sqlmap（SQL注入）、pwntools（漏洞利用框架）
+
+**和 [4] 的区别**：
+- [4] 装了 600+ 工具，但需要 WSL，占 2GB
+- [8] 只装几个 Python 工具，秒装，但覆盖不全
+
+**建议**：[4] 是主力，[8] 是补充。如果不想装 Kali，[8] 至少能用 sqlmap。
+
+---
+
+## [9] deploy — 单独部署 bridge.md 和 skills
+
+**做了什么**：
+- 把 bridge.md 复制到 `~/.codex/`
+- 把 27 个 skills 复制到 `~/.codex/skills/`
+- 修改 Codex 配置指向 bridge.md
+
+**和 [1] 的区别**：
+- [1] 同时做了部署 + 启动代理
+- [9] 只做部署，不启动代理
+
+**适用场景**：
+- 你想用直连模式（不经过代理，直接连 57321）
+- 已经部署过，bridge.md 更新了想重新部署
+
+---
+
+## [0] quit — 退出
+
+**做了什么**：
+- 关闭控制面板窗口
+- 不影响已在运行的代理
+
+**注意**：选 [0] 只是关掉菜单，代理还会继续跑。要完全停止用 [2]。
+
+---
+
+## 典型使用流程
+
+```
+第一次用：
+  [1] → 启动代理 → 重启Codex → 输入zxwn验证
+
+每次用：
+  [1] → 启动代理 → Codex里开工
+
+出问题了：
+  [2] → 停止还原 → 重新 [1] 启动
+
+装工具：
+  [4] → 装Kali → [7] 检查 → [8] 补充
+
+更新bridge.md后：
+  [9] → 重新部署 → 重启Codex
+```
+
 ## 技术对比
 
 | | 纯提示词 | 提示词+编码技巧 | **NERV-BREAK-5.6** |
