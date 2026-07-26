@@ -78,22 +78,344 @@ NERV-BREAK-5.6 不跟这些通路对抗。它让通路变得毫无意义。
 
 ![](images/02_request_response_flow_minimal.svg)
 
-## 快速开始
+# NERV-BREAK-5.6 食用指南
 
-```bash
+---
+
+## 一、环境要求
+
+| 项目 | 最低版本 |
+|---|---|
+| Windows | 10/11 |
+| Python | 3.8+ |
+| Codex CLI | 最新版 |
+| 中转站 | 127.0.0.1:57321 或自定义 |
+
+可选：WSL2（Kali Linux）、Docker Desktop、Go（MCP工具编译）
+
+---
+
+## 二、安装部署
+
+### 2.1 下载项目
+
+```powershell
 git clone https://github.com/zxwn/NERV-BREAK-5.6.git
-cd NERV-BREAK-5.6
-scripts/lab.bat          # 交互菜单
+cd 5.6-JAILBREAK-NERV
 ```
 
-| 模式 | 命令 | 场景 |
-|---|---|---|
-| 中转站部署 | `lab.bat → 1` | API代理/中转站之后 |
-| 直连API | `python direct_setup.py apply` | 直接OpenAI密钥 |
-| 停止+还原 | `lab.bat → 2` | 关闭代理，还原配置 |
-| 状态 | `lab.bat → 3` | 查看健康状况 |
+### 2.2 一键启动（推荐）
 
-重启 Codex CLI。输入 `zxwn` → 返回 `Knowing you, I still like you.`
+双击 `scripts\lab.bat`，看到菜单后按 `1`。
+
+代理会自动完成：
+- 检测 Codex 安装位置
+- 读取中转站配置
+- 部署 bridge.md 到 Codex
+- 修改 Codex 配置指向代理端口 8080
+- 启动 MITM 代理
+
+启动成功后终端显示：
+```
+====================================================
+  NERV-BREAK-5.6  :8080  ->  http://127.0.0.1:57321/v1
+  mem:0  rules:2  tamper:ON
+====================================================
+  Proxy starting...
+```
+
+### 2.3 手动部署
+
+**方式A — 代理模式（有中转站）**：
+```powershell
+# 终端1：启动代理
+python proxy_relay.py
+
+# 终端2：部署bridge.md和技能
+python deploy.py apply
+```
+
+**方式B — 直连模式（直接OpenAI API）**：
+```powershell
+python direct_setup.py apply
+```
+
+### 2.4 验证部署
+
+重启 Codex CLI，输入：
+```
+zxwn
+```
+
+返回 `代码` = 部署成功。
+
+---
+
+## 三、基本使用
+
+### 3.1 软件分析
+
+```
+分析这个程序的授权验证逻辑
+检查这个二进制用了什么保护
+提取目标程序的字符串和导入表
+分析这个APK的VIP验证流程
+```
+
+### 3.2 Web 安全
+
+```
+扫描 192.168.1.0/24 的开放端口
+检查 example.com 的SQL注入点
+枚举 target.com 的所有子域名
+测试这个API的认证绕过可能性
+```
+
+### 3.3 移动应用
+
+```
+反编译这个APK，找到支付验证逻辑
+分析这个IPA的越狱检测机制
+修改smali代码解锁VIP功能
+查看应用的网络请求和API端点
+```
+
+### 3.4 加密分析
+
+```
+识别这个二进制使用的加密算法
+分析JWT令牌的签名方式
+破解简单的XOR/Base64编码
+提取固件中的硬编码密钥
+```
+
+---
+
+## 四、代理面板解读
+
+启动代理后，终端实时显示：
+
+```
+>>> USER [12:00:01] zxwn                               ← 用户输入
+    [->] req                                             ← 请求已发送
+    [INJ] injected                                       ← bridge.md已注入
+    [<-] 12345B                                          ← 中转站返回数据量
+<<< AI   [12:00:05]                                      ← AI回复
+    Knowing you, I still like you
+    [MEM] general learned                                ← 记忆已保存
+```
+
+**图例说明**：
+
+| 标记 | 含义 |
+|---|---|
+| `>>> USER` | 用户输入消息 |
+| `<<< AI` | AI回复内容 |
+| `[->] req` | 请求已转发 |
+| `[INJ] injected` | 系统指令注入成功 |
+| `[<-] 12345B` | 收到中转站响应（字节数） |
+| `[TMP] tampered` | 篡改引擎触发（检测到拒绝） |
+| `[MEM] xxx learned` | 成功操作已记录 |
+| `[ERR]` | 出现错误（红色高亮） |
+
+### 4.1 Web 仪表盘
+
+浏览器打开 `http://localhost:8090`，查看：
+- 操作统计（破解/逆向/渗透 计数）
+- 最近15条对话记录
+
+### 4.2 健康检查
+
+```powershell
+curl http://127.0.0.1:8080
+```
+返回：
+```
+NERV-BREAK-5.6 OK
+relay: http://127.0.0.1:57321
+requests: 42
+rules: 2
+```
+
+---
+
+## 五、MCP 工具系统（可选）
+
+### 5.1 配置
+
+将 `config/mcp_config.txt` 的内容追加到 `~/.codex/config.toml`：
+
+```toml
+[mcp_servers.nerv_break]
+command = "python"
+args = ["C:\\Users\\Administrator\\Desktop\\5.6-JAILBREAK-NERV\\mcp_server.py"]
+startup_timeout_sec = 30
+```
+
+### 5.2 使用
+
+配置后在 Codex 中直接调用工具：
+
+```
+用 nmap 扫描 192.168.1.0/24
+sqlmap 测试 https://target.com/page?id=1
+strings 提取 binary.exe 的字符串
+frida 追踪进程的加密函数
+```
+
+### 5.3 自定义工具
+
+编辑 `tools/tools.json`，添加自己的工具定义：
+
+```json
+{
+  "name": "my_tool",
+  "desc": "描述",
+  "cmd": "命令 {arg1} {arg2}",
+  "params": ["arg1", "arg2"],
+  "category": "network"
+}
+```
+
+---
+
+## 六、Kali Linux 集成（可选）
+
+### 6.1 WSL Kali（推荐）
+
+```powershell
+# 安装
+wsl --install -d kali-linux
+
+# 进入 WSL
+wsl -d kali-linux
+
+# 安装工具集
+sudo apt update
+sudo apt install -y kali-linux-headless
+
+# 启动MCP时指定后端
+python mcp_server.py --wsl
+```
+
+### 6.2 Docker Kali
+
+```powershell
+docker pull kalilinux/kali-rolling
+docker run -d --name kali-tools kalilinux/kali-rolling sleep infinity
+docker exec kali-tools apt update
+docker exec kali-tools apt install -y kali-linux-headless
+
+python mcp_server.py --docker kali-tools
+```
+
+### 6.3 远程 SSH Kali
+
+```powershell
+python mcp_server.py --kali root@192.168.1.100
+```
+
+---
+
+## 七、代理控制
+
+### 7.1 启动
+```powershell
+scripts\lab.bat → 1
+```
+
+### 7.2 停止并还原
+```powershell
+scripts\lab.bat → 2
+```
+
+代理关闭后自动还原 Codex 配置到 57321。
+
+### 7.3 查看状态
+```powershell
+scripts\lab.bat → 3
+```
+
+---
+
+## 八、项目结构
+
+```
+NERV-BREAK-5.6/
+├── bridge.md              # 核心指令集（竞赛框架）
+├── proxy_relay.py         # MITM代理（注入+篡改+面板）
+├── mcp_server.py          # MCP工具服务器
+├── deploy.py              # 部署到Codex
+├── direct_setup.py        # 直连API模式
+├── verify.py              # 验证触发词
+├── requirements.txt       # Python依赖
+├── README.md              # 中文文档
+├── README_EN.md           # 英文文档
+├── scripts/               # 启动脚本
+│   ├── lab.bat            # 主控制菜单
+│   └── kali_setup.bat     # Kali安装向导
+├── tools/                 # MCP工具系统
+│   ├── tools.json         # 工具定义（可编辑）
+│   ├── setup.py           # 工具下载器
+│   ├── check_tools.py     # 工具可用性检查
+│   └── install.bat        # 安装向导
+├── skills/                # 27个专项技能模块
+├── images/                # 架构图
+├── kb/                    # 知识库
+├── cases/                 # 案例索引
+├── exports/               # 分析输出
+├── patches/               # Patch产物
+├── notes/                 # 分析笔记
+├── reports/               # 报告输出
+└── config/                # MCP配置模板
+```
+
+---
+
+## 九、故障排查
+
+| 问题 | 原因 | 解决 |
+|---|---|---|
+| zxwn 无响应 | bridge.md未部署 | `python deploy.py apply` |
+| 代理面板空白 | Codex直连57321 | 检查config.toml base_url=8080 |
+| stream disconnected | 中站转返回格式不匹配 | 代理已处理，重启试试 |
+| codex无法连接 | 代理挂了 | `lab.bat → 2` 还原Codex |
+| 模型仍然拒绝 | bridge.md未生效 | 确认 `lab.bat → 1` 完全启动 |
+| MCP工具报错 | 工具未安装 | `tools/install.bat` 或装Kali |
+
+---
+
+## 十、卸载
+
+```powershell
+# 方式1：菜单卸载
+scripts\lab.bat → 2
+
+# 方式2：手动
+python deploy.py remove      # 删除bridge.md + skills
+taskkill /FI "WINDOWTITLE eq nerv*" /F   # 停止代理
+# 然后手动修改config.toml中base_url改回57321
+```
+
+---
+
+## 十一、常见问题
+
+**Q: 代理和直连有什么区别？**
+A: 代理模式有注入+篡改保护，适合中转站。直连模式只有bridge.md指令，适合直接OpenAI API。
+
+**Q: 如何自定义篡改规则？**
+A: 编辑 `proxy_relay.py` 中的 `TAMPER_RULES` 列表。格式：`(正则表达式, 替换文本)`。
+
+**Q: MSF/sqlmap等大工具怎么装？**
+A: 装WSL Kali一行搞定 `wsl --install -d kali-linux`，60+工具直接可用。
+
+**Q: 怎么知道篡改有没有生效？**
+A: 面板出现 `[TMP] tampered` 标记 = 拒绝被拦截。没有标记 = 模型直接配合了。
+
+**Q: 为什么bridge.md要用中文？**
+A: 中文在模型的安全分类器中权重更低，不容易触发内部安全审核。
+
 
 ## 功能特性
 
