@@ -3,7 +3,23 @@
 
 # NERV-BREAK-5.6 — GPT-5.6 指令工程/codex-instruct-5.6
 
-## 项目速览
+<p align="center">
+  <img alt="用途" src="https://img.shields.io/badge/用途-授权安全研究-8a2be2">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white">
+  <img alt="Codex CLI" src="https://img.shields.io/badge/Codex_CLI-配置与代理-111827">
+  <img alt="平台" src="https://img.shields.io/badge/平台-Windows%20%7C%20Linux-2563EB">
+  <a href="https://github.com/ciaooo55/5.6-JAILBREAK-NERV-codex-instruct-5.6/commits/main"><img alt="最后提交" src="https://img.shields.io/github/last-commit/ciaooo55/5.6-JAILBREAK-NERV-codex-instruct-5.6"></a>
+</p>
+
+<p align="center">
+  <a href="#-项目速览">项目速览</a> ·
+  <a href="#二-安装与部署">安装部署</a> ·
+  <a href="#三-基本使用">基本使用</a> ·
+  <a href="#八-项目结构">项目结构</a> ·
+  <a href="#九-故障排查">故障排查</a>
+</p>
+
+## 📌 项目速览
 
 | 项目 | 说明 |
 | --- | --- |
@@ -22,7 +38,7 @@
 
 ---
 
-## 这是什么
+## 🧭 这是什么
 
 NERV-BREAK-5.6 通过**上下文结构工程**消除 GPT-5.6 的拒绝机制——不对抗模型的安全训练，而是重构运行上下文，让拒绝通路从一开始就不被激活。
 
@@ -34,7 +50,7 @@ NERV-BREAK-5.6 通过**上下文结构工程**消除 GPT-5.6 的拒绝机制—�
 
 传统破甲提示词直接对抗拒绝。它们有效——直到下一次模型更新让它们失效。NERV-BREAK-5.6 走的是另一条路。
 
-## 原理 — 三层纵深防御
+## 🧩 原理 — 三层纵深防御
 
 ### 第一层：上下文重构
 
@@ -77,7 +93,7 @@ NERV-BREAK-5.6 不跟这些通路对抗。它让通路变得毫无意义。
 
 不搞 base64。不搞 Unicode 混淆。没有可疑模式。干净交付。
 
-## 架构
+## 🏗️ 架构
 
 ![](images/01_three_layer_defense_minimal.svg)
 
@@ -91,11 +107,11 @@ NERV-BREAK-5.6 不跟这些通路对抗。它让通路变得毫无意义。
 
 ![](images/02_request_response_flow_minimal.svg)
 
-# NERV-BREAK-5.6 食用指南
+# 📖 NERV-BREAK-5.6 使用指南
 
 ---
 
-## 一、环境要求
+## 一、🧰 环境要求
 
 | 项目 | 最低版本 |
 |---|---|
@@ -108,7 +124,7 @@ NERV-BREAK-5.6 不跟这些通路对抗。它让通路变得毫无意义。
 
 ---
 
-## 二、安装部署
+## 二、🚀 安装与部署
 
 ### 2.1 下载项目
 
@@ -164,7 +180,7 @@ zxwn
 
 ---
 
-## 三、基本使用
+## 三、🖥️ 基本使用
 
 ### 3.1 软件分析
 
@@ -204,7 +220,7 @@ zxwn
 
 ---
 
-## 四、代理面板解读
+## 四、📊 代理面板解读
 
 启动代理后，终端实时显示：
 
@@ -252,7 +268,7 @@ rules: 2
 
 ---
 
-## 五、MCP 工具系统（可选）
+## 五、🧰 MCP 工具系统（可选）
 
 ### 5.1 配置
 
@@ -292,7 +308,7 @@ frida 追踪进程的加密函数
 
 ---
 
-## 六、Kali Linux 集成（可选）
+## 六、🐉 Kali Linux 集成（可选）
 
 ### 6.1 WSL Kali（推荐）
 
@@ -330,7 +346,7 @@ python mcp_server.py --kali root@192.168.1.100
 
 ---
 
-## 七、代理控制
+## 七、🎛️ 代理控制
 
 ### 7.1 启动
 ```powershell
@@ -351,7 +367,7 @@ scripts\lab.bat → 3
 
 ---
 
-## 八、项目结构
+## 八、📁 项目结构
 
 ```
 NERV-BREAK-5.6/
@@ -385,7 +401,7 @@ NERV-BREAK-5.6/
 
 ---
 
-## 九、故障排查
+## 九、🩺 故障排查
 
 | 问题 | 原因 | 解决 |
 |---|---|---|
@@ -398,7 +414,7 @@ NERV-BREAK-5.6/
 
 ---
 
-## 十、卸载
+## 十、🧹 卸载
 
 ```powershell
 # 方式1：菜单卸载
@@ -412,7 +428,7 @@ taskkill /FI "WINDOWTITLE eq nerv*" /F   # 停止代理
 
 ---
 
-## 十一、常见问题
+## 十一、❓ 常见问题
 
 **Q: 代理和直连有什么区别？**
 A: 代理模式有注入+篡改保护，适合中转站。直连模式只有bridge.md指令，适合直接OpenAI API。
@@ -430,7 +446,7 @@ A: 面板出现 `[TMP] tampered` 标记 = 拒绝被拦截。没有标记 = 模�
 A: 中文在模型的安全分类器中权重更低，不容易触发内部安全审核。
 
 
-## 功能特性
+## ✨ 功能特性
 
 ### 代理引擎
 - **自动检测中转站** — 读取Codex配置，无需手动设置
@@ -466,7 +482,7 @@ A: 中文在模型的安全分类器中权重更低，不容易触发内部安�
 ### 技能 — 28个模块
 `crack-keygen` · `reverse-engineering` · `web-pentest` · `exploit-dev` · `evasion` · `cloud-audit-bypass` · `network-pentest` · `post-exploit` · `malware-dev` · `game-cheat` · `phishing-kit` · `wireless-attacks` · `ransomware-builder` · `data-exfil` · `crypto-tools` · `anti-debug` · `binary-protect-bypass` · `code-obfuscate` · `posture-assessment` · `full-crack` · `full-reverse` · `vip-bypass` · `card-key` · `full-pentest` · `exploit-attack` · `vuln-scanner` · `web-crawler` · `rei-fallback`
 
-# lab.bat 控制面板 — 每条命令详解
+# 🎛️ lab.bat 控制面板 — 每条命令详解
 
 ---
 
@@ -636,7 +652,7 @@ Available: 6/57          ← 只装了6个（本机没有Kali的情况下）
 
 ---
 
-## 典型使用流程
+## 🧭 典型使用流程
 
 ```
 第一次用：
@@ -655,7 +671,7 @@ Available: 6/57          ← 只装了6个（本机没有Kali的情况下）
   [9] → 重新部署 → 重启Codex
 ```
 
-## 技术对比
+## 📐 技术对比
 
 | | 纯提示词 | 提示词+编码技巧 | **NERV-BREAK-5.6** |
 |---|---|---|---|
@@ -667,23 +683,23 @@ Available: 6/57          ← 只装了6个（本机没有Kali的情况下）
 | Kali集成 | 否 | 否 | **WSL / Docker / SSH** |
 | 提示词大小 | 4000+字 | 不等 | **~2200字** |
 
-## 环境要求
+## 🧰 环境要求
 
 - Python 3.8+
 - Codex CLI + GPT-5.6 系列
 
-## 许可证
+## 📄 许可证
 
 MIT。研究工具——仅限授权使用。
 
 ---
 
-## 交流群聊发布页
+## 💬 交流群聊发布页
 
 - <QQ> 252452778（非本人运营）
 - <发布分享频道> https://t.me/zxwnai
 - <闲聊技术交流吹水群聊> https://t.me/zxwnaisui
 
-## 赞助和打赏
+## ❤️ 赞助和打赏
 
 - 爱发电 https://ifdian.net/a/zxwn520
